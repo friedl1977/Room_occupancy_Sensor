@@ -53,9 +53,6 @@ Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);   // Hardware SP
 
 float p = 3.1415926;
 
-
-
-
 void setup(void) {
 
   // TFT Setup //
