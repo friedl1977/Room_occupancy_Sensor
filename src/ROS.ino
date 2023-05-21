@@ -25,7 +25,7 @@ int PathTrack[3][2];
 
 int counter = 0;
 
-static int DIST_THRESHOLD_MAX = 0;
+static int DIST_THRESHOLD_MAX = 0.75;
 //static int MIN_DISTANCE[] = {0, 0};
 
 static int center[2] = {0,0};   // center of the two zones 
@@ -182,7 +182,7 @@ void measure_zones() {
         
 //// IF SOMEONE IS DETECTED -- CALL PATHTRACK ////
    
-    if ((sum_zone_0 <= (calibrated_zone_0 * 0.75)) || (sum_zone_1 <= (calibrated_zone_1 * 0.75))) {
+    if ((sum_zone_0 <= (calibrated_zone_0 * DIST_THRESHOLD_MAX)) || (sum_zone_1 <= (calibrated_zone_1 * DIST_THRESHOLD_MAX))) {
         delay(10);
         Path();
         } else {
@@ -236,6 +236,17 @@ void Path() {
     
             PathTrack[k][0] = sum_zone_0 / number_attempts;
             PathTrack[k][1] = sum_zone_1 / number_attempts;
+
+            if (sum_zone_0 < 20) { 
+            counter = 0;
+            tft.setTextWrap(false);
+            tft.fillScreen(ST77XX_BLACK);
+            tft.setCursor(30, 30);
+            tft.setTextColor(ST77XX_WHITE);
+            tft.setTextSize(36);
+            tft.print(counter);
+            delay(1500);
+            }
         }
     
        // Particle.publish("Zone 1: " + String(PathTrack[k][0]) + " &  Zone 2:" + String(PathTrack[k][1]), PRIVATE);  // DEBUG
@@ -302,10 +313,6 @@ void count() {
         TFT();
         Exit_state = 0;
     }    
- 
-    if ((sum_zone_0 < 50) && (sum_zone_1 < 50)) { 
-        counter = 0;
-    }
 
     if (counter <= 0) {
         counter = 0;
