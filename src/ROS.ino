@@ -71,6 +71,14 @@ void setup(void) {
     Particle.publish("Counter is online");
     delay(2000);
     Particle.publish("I am ready", PRIVATE);
+
+    tft.setTextWrap(false);
+    tft.fillScreen(ST77XX_BLACK);
+    tft.setCursor(30, 30);
+    tft.setTextColor(ST77XX_WHITE);
+    tft.setTextSize(36);
+    tft.print("0");
+    delay(50);
 }
 
 void zones_calibration() {
@@ -295,6 +303,10 @@ void count() {
         Exit_state = 0;
     }    
  
+    if ((sum_zone_0 < 50) && (sum_zone_1 < 50)) { 
+        counter = 0;
+    }
+
     if (counter <= 0) {
         counter = 0;
     }

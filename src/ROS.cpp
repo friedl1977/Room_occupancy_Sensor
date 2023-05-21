@@ -18,8 +18,8 @@ void count();
 void loop();
 void TFT();
 #line 6 "/Users/friedl/Desktop/Projects/ROS/src/ROS.ino"
-#define SHUTDOWN_PIN 2    // OPTIONAL Shut Down pin    
-#define INTERRUPT_PIN 3   // OPTIONAL Interrupt pin
+#define SHUTDOWN_PIN 2          // OPTIONAL Shut Down pin    
+#define INTERRUPT_PIN 3         // OPTIONAL Interrupt pin
 
 SFEVL53L1X distanceSensor(Wire);
 
@@ -43,7 +43,7 @@ int counter = 0;
 static int DIST_THRESHOLD_MAX = 0;
 //static int MIN_DISTANCE[] = {0, 0};
 
-static int center[2] = {0,0}; /* center of the two zones */  
+static int center[2] = {0,0};   // center of the two zones 
 static int Zone = 0;
 
 int ROI_height = 0;
@@ -61,21 +61,18 @@ int Exit_state;
 
 // ST7789 TFT  definitions // 
 #define TFT_CS        A5
-#define TFT_RST       D6 // Or set to -1 and connect to Arduino RESET pin
+#define TFT_RST       D6        // Or set to -1 and connect to Arduino RESET pin
 #define TFT_DC        D5
 
 Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);   // Hardware SPI
 
 float p = 3.1415926;
 
-
-
-
 void setup(void) {
 
   // TFT Setup //
   Serial.begin(9600);
-  tft.init(240, 320);                           // Init ST7789 320x240
+  tft.init(240, 320);           // Init ST7789 320x240
 
   uint16_t time = millis();
   tft.fillScreen(ST77XX_BLACK);
@@ -90,12 +87,13 @@ void setup(void) {
     delay(2000);
     Particle.publish("I am ready", PRIVATE);
 
-  // Serial.println(time, DEC);
-  // delay(1000);
-
-  // // tft print function!
-  // tftPrintTest();
-  // delay(4000);
+    tft.setTextWrap(false);
+    tft.fillScreen(ST77XX_BLACK);
+    tft.setCursor(30, 30);
+    tft.setTextColor(ST77XX_WHITE);
+    tft.setTextSize(36);
+    tft.print("0");
+    delay(50);
 }
 
 void zones_calibration() {
@@ -124,8 +122,8 @@ void zones_calibration() {
       distanceSensor.setROI(ROI_height, ROI_width, center[0]);  // first value: height of the zone, second value: width of the zone
       delay(50);
       distanceSensor.setTimingBudgetInMs(50);
-      distanceSensor.startRanging(); //Write configuration bytes to initiate measurement
-      distance = distanceSensor.getDistance(); //Get the result of the measurement from the sensor
+      distanceSensor.startRanging();                            //Write configuration bytes to initiate measurement
+      distance = distanceSensor.getDistance();                  //Get the result of the measurement from the sensor
       distanceSensor.stopRanging();      
       sum_zone_0 = sum_zone_0 + distance;
       Zone++;
@@ -137,8 +135,8 @@ void zones_calibration() {
       distanceSensor.setROI(ROI_height, ROI_width, center[1]);  // first value: height of the zone, second value: width of the zone
       delay(50);
       distanceSensor.setTimingBudgetInMs(50);
-      distanceSensor.startRanging(); //Write configuration bytes to initiate measurement
-      distance = distanceSensor.getDistance(); //Get the result of the measurement from the sensor
+      distanceSensor.startRanging();                            //Write configuration bytes to initiate measurement
+      distance = distanceSensor.getDistance();                  //Get the result of the measurement from the sensor
       distanceSensor.stopRanging();      
       sum_zone_1 = sum_zone_1 + distance;
       Zone++;
@@ -230,7 +228,7 @@ void Path() {
             delay(30);
             distanceSensor.setTimingBudgetInMs(33);
             distanceSensor.startRanging();                              //Write configuration bytes to initiate measurement
-            distance = distanceSensor.getDistance();                  //Get the result of the measurement from the sensor
+            distance = distanceSensor.getDistance();                    //Get the result of the measurement from the sensor
             distanceSensor.stopRanging();      
             sum_zone_0 = sum_zone_0 + distance;
             Zone++;
@@ -245,7 +243,7 @@ void Path() {
             delay(30);
             distanceSensor.setTimingBudgetInMs(33);
             distanceSensor.startRanging();                              //Write configuration bytes to initiate measurement
-            distance = distanceSensor.getDistance();                  //Get the result of the measurement from the sensor
+            distance = distanceSensor.getDistance();                    //Get the result of the measurement from the sensor
             distanceSensor.stopRanging();      
             sum_zone_1 = sum_zone_1 + distance;
             Zone++;
@@ -320,6 +318,10 @@ void count() {
         Exit_state = 0;
     }    
  
+    if ((sum_zone_0 < 50) && (sum_zone_1 < 50)) { 
+        counter = 0;
+    }
+
     if (counter <= 0) {
         counter = 0;
     }
@@ -328,15 +330,11 @@ void count() {
 
 
 void loop() {
+
   measure_zones();
-  // tft.invertDisplay(true);
-  // delay(500);
-  // tft.invertDisplay(false);
-  // delay(500);
+
 }
 
-
-//void tftPrintTest() {
   void TFT() {
   tft.setTextWrap(false);
   tft.fillScreen(ST77XX_BLACK);
