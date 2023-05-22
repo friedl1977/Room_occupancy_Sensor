@@ -45,11 +45,11 @@ int Exit_state;
 #include <SPI.h>
 
 // ST7789 TFT  definitions // 
-#define TFT_CS        A5
-#define TFT_RST       D6        // Or set to -1 and connect to Arduino RESET pin
+#define TFT_CS        S3
+#define TFT_RST       D6        
 #define TFT_DC        D5
 
-Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);   // Hardware SPI
+Adafruit_ST7789 tft = Adafruit_ST7789(TFT_CS, TFT_DC, TFT_RST);     // Hardware SPI
 
 float p = 3.1415926;
 
@@ -57,7 +57,7 @@ void setup(void) {
 
   // TFT Setup //
   Serial.begin(9600);
-  tft.init(240, 320);           // Init ST7789 320x240
+  tft.init(240, 320);                                               // Init ST7789 320x240
 
   uint16_t time = millis();
   tft.fillScreen(ST77XX_BLACK);
@@ -180,9 +180,9 @@ void measure_zones() {
     }
     
         
-//// IF SOMEONE IS DETECTED -- CALL PATHTRACK ////
+// IF SOMEONE IS DETECTED -- CALL PATHTRACK //
    
-    if ((sum_zone_0 <= (calibrated_zone_0 * DIST_THRESHOLD_MAX)) || (sum_zone_1 <= (calibrated_zone_1 * DIST_THRESHOLD_MAX))) {
+    if ((sum_zone_0 <= (calibrated_zone_0 * 0.75)) || (sum_zone_1 <= (calibrated_zone_1 * 0.75))) {
         delay(10);
         Path();
         } else {
@@ -245,6 +245,7 @@ void Path() {
             tft.setTextColor(ST77XX_WHITE);
             tft.setTextSize(36);
             tft.print(counter);
+            //delay(1500);
             delay(1500);
             }
         }
@@ -334,5 +335,6 @@ void loop() {
   tft.setTextColor(ST77XX_WHITE);
   tft.setTextSize(36);
   tft.print(counter);
+  //delay(1500);
   delay(1500);
 }

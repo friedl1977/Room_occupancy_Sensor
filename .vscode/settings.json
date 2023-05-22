@@ -4,6 +4,7 @@
     "files.associations": {
         "*.ino": "cpp"
     },
-    "particle.targetDevice": "e00fce68f7d13b0f55dea7c1",
-    "C_Cpp.errorSquiggles": "disabled"
+    "C_Cpp.errorSquiggles": "disabled",
+    "particle.firmwareVersion": "5.3.2",
+    "particle.targetPlatform": "p2"
 }
